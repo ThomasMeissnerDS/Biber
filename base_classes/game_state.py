@@ -19,4 +19,3 @@ class GameState:
 
     def evaluate_game(self):
         pass
-
