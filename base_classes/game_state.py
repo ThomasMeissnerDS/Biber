@@ -2,12 +2,13 @@ from base_classes.players import Player
 from base_classes.cards import Card
 from base_classes.deck import CardDeck, OpenStaple
 import numpy as np
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 
 class GameState:
-    def __init__(self, random_seed: int, nb_players: int):
+    def __init__(self, random_seed: int, nb_players: int, max_turns: int = 10):
         self.turn = 0
+        self.max_turns = max_turns
         self.nb_players: int = nb_players
         self.players: List[Optional[Player]] = []
         self.player_in_action: Optional[Player] = None
@@ -16,6 +17,7 @@ class GameState:
         self.open_staple: Optional[OpenStaple] = None
         self.random_seed: int = random_seed
         self.random_generator = np.random.default_rng(self.random_seed)
+        self.game_status: Literal["ongoing", "finished"] = "ongoing"
 
     def fill_deck(self):
         poss_in_deck = [pos for pos in range(45)]

@@ -14,15 +14,16 @@ def move_card_from_deck_to_player(game_state: GameState, player: Player):
     player.cards.append(sel_card)
     player.cards[-1].current_position_type = "player"
     player.cards[-1].position_within_type = len(player.cards) - 1
+    return game_state
 
 
-def fill_player_hands(game: GameState):
+def fill_player_hands(game_state: GameState):
     # every player gets 4 cards
     for i in range(4):
-        for idx in range(game.nb_players):
-            move_card_from_deck_to_player(game, game.players[idx])
+        for idx in range(game_state.nb_players):
+            game_state = move_card_from_deck_to_player(game_state, game_state.players[idx])
 
-    return game
+    return game_state
 
 
 def prepare_game(game: GameState):
@@ -30,5 +31,13 @@ def prepare_game(game: GameState):
     game.create_players()
     game = fill_player_hands(game)
     return game
+
+
+def make_turn(game_state: GameState):
+    game_state.turn += 1
+    if game_state.turn > game_state.max_turns:
+        game_state.game_status = "finished"
+
+    return game_state
 
 
