@@ -13,7 +13,7 @@ def move_card_from_deck_to_player(game_state: GameState, player: Player):
     game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
     player.cards.append(sel_card)
     player.cards[-1].current_position_type = "player"
-    player.cards[-1].position_within_type = len(player.cards - 1)
+    player.cards[-1].position_within_type = len(player.cards) - 1
 
 
 def fill_player_hands(game: GameState):
