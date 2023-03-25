@@ -1,4 +1,3 @@
-from actions import player_actions
 from base_classes.players import Player
 from base_classes.cards import Card
 from base_classes.deck import CardDeck, OpenStaple
@@ -13,12 +12,13 @@ class GameState:
         self.players: Optional[List[Player]] = None
         self.player_in_action: Optional[Player] = None
         self.player_order: Optional[List[Player]] = None
-        self.card_deck: Optional[CardDeck] = CardDeck()
+        self.card_deck: Optional[CardDeck] = None
         self.open_staple: Optional[OpenStaple] = None
         self.random_seed: int = random_seed
         self.random_generator = np.random.default_rng(self.random_seed)
 
-    def _fill_deck(self):
+    def fill_deck(self):
+        self.card_deck = CardDeck()
         poss_in_deck = [pos for pos in range(45)]
 
         # fill number cards into deck
@@ -29,11 +29,9 @@ class GameState:
         [self.card_deck.cards_in_deck.append(Card(card_type="trade", position_within_type=self.random_generator.choice(poss_in_deck, 1, replace=False), value=0)) for _i in range(9)]
         [self.card_deck.cards_in_deck.append(Card(card_type="reveal", position_within_type=self.random_generator.choice(poss_in_deck, 1, replace=False), value=0)) for _i in range(7)]
 
-    def _create_players(self):
+    def create_players(self):
         [self.players.append(Player(name=f"player_{player}")) for player in range(self.nb_players)]
 
-    def _fill_player_hands(self):
-        pass
 
     def execute_turn(self):
         pass
