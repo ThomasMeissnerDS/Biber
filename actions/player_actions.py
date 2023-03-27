@@ -18,12 +18,10 @@ def draw_card_from_open_staple(game: GameState, player: Player) -> (GameState, P
     return game, player
 
 
-def exchange_card(player: Player, hand_idx, game_state: GameState) -> (Player, GameState):
-    old_card = player.cards[hand_idx]
-    game_state.open_staple.cards_on_staple.append(old_card)
-    player.cards[hand_idx] = player.card_in_hand
+def move_card_from_hand_to_open_staple(game_state: GameState, player: Player) -> (GameState, Player):
+    game_state.open_staple.append(player.card_in_hand)
     player.card_in_hand = None
-    return player, game_state
+    return game_state, player
 
 
 def pass_turn(game_state: GameState) -> GameState:

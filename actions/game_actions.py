@@ -9,7 +9,7 @@ def create_game():
 
 
 def next_player_idx(game_state: GameState) -> GameState:
-    if game_state.player_in_action_idx + 1 > (game_state.nb_players -1 ):
+    if game_state.player_in_action_idx + 1 > (game_state.nb_players - 1):
         game_state.player_in_action_idx = 0
     else:
         game_state.player_in_action_idx += 1

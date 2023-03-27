@@ -15,7 +15,7 @@ class GameState:
         self.player_in_action_idx: int = 0
         self.player_order: Optional[List[Player]] = None
         self.card_deck: CardDeck = CardDeck()
-        self.open_staple: Optional[OpenStaple] = None
+        self.open_staple: List[Optional[OpenStaple]] = []
         self.random_seed: int = random_seed
         self.random_generator = np.random.default_rng(self.random_seed)
         self.game_status: Literal["ongoing", "finished"] = "ongoing"
@@ -33,9 +33,6 @@ class GameState:
 
     def create_players(self):
         [self.players.append(Player(name=f"player_{player}")) for player in range(self.nb_players)]
-
-    def execute_turn(self):
-        pass
 
     def evaluate_game(self):
         pass
