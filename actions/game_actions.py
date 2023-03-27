@@ -8,12 +8,18 @@ def create_game():
     return new_game
 
 
+def next_player_idx(game_state: GameState) -> GameState:
+    if game_state.player_in_action_idx + 1 > (game_state.nb_players -1 ):
+        game_state.player_in_action_idx = 0
+    else:
+        game_state.player_in_action_idx += 1
+    return game_state
+
+
 def move_card_from_deck_to_player(game_state: GameState, player: Player):
     sel_card = game_state.card_deck.cards_in_deck[-1]   # take top card
     game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
     player.cards.append(sel_card)
-    player.cards[-1].current_position_type = "player"
-    player.cards[-1].position_within_type = len(player.cards) - 1
     return game_state
 
 
