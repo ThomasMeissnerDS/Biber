@@ -15,7 +15,7 @@ class GameState:
         self.player_in_action_idx: int = 0
         self.player_order: Optional[List[Player]] = None
         self.card_deck: CardDeck = CardDeck()
-        self.open_staple: List[Optional[OpenStaple]] = []
+        self.open_staple: OpenStaple = OpenStaple()
         self.random_seed: int = random_seed
         self.random_generator = np.random.default_rng(self.random_seed)
         self.game_status: Literal["ongoing", "finished"] = "ongoing"

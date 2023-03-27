@@ -19,7 +19,7 @@ def draw_card_from_open_staple(game: GameState, player: Player) -> (GameState, P
 
 
 def move_card_from_hand_to_open_staple(game_state: GameState, player: Player) -> (GameState, Player):
-    game_state.open_staple.append(player.card_in_hand)
+    game_state.open_staple.cards_on_staple.append(player.card_in_hand)
     player.card_in_hand = None
     return game_state, player
 

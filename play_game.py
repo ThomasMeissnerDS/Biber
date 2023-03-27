@@ -1,5 +1,8 @@
+from actions.card_actions import exchange_card
 from actions.game_actions import prepare_game, make_turn
-from actions.player_actions import draw_card_from_deck, draw_card_from_open_staple, move_card_from_hand_to_open_staple
+from actions.player_actions import (
+    draw_card_from_deck, draw_card_from_open_staple, move_card_from_hand_to_open_staple
+)
 from base_classes.game_state import GameState
 from typing import Dict, List
 
@@ -35,9 +38,16 @@ def play_game():
 
             if decision == "move_to_open_staple":
                 game, player = move_card_from_hand_to_open_staple(game, player)
-            else:
-                # TODO: Add actions for each type
+            elif decision == "use_special_card" and player.card_in_hand.card_type == "number":
+                idx_decision = game.random_generator.choice([i for i in range(4)])
+                player, game = exchange_card(player, idx_decision, game)
+            elif decision == "use_special_card" and player.card_in_hand.card_type == "double_turn":
                 pass
+            elif decision == "use_special_card" and player.card_in_hand.card_type == "trade":
+                pass
+            elif decision == "use_special_card" and player.card_in_hand.card_type == "trade":
+                pass
+
 
             del play_options
             del decision
