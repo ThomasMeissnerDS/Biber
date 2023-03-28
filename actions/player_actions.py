@@ -8,8 +8,8 @@ from base_classes.players import Player
 def draw_card_from_deck(
     game_state: GameState, player: Player
 ) -> Tuple[GameState, Player]:
-    drawn = game_state.open_staple.cards_on_staple[-1]
-    game_state.open_staple.cards_on_staple = game_state.open_staple.cards_on_staple[:-1]
+    drawn = game_state.card_deck.cards_in_deck[-1]
+    game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
     player.card_in_hand = drawn
     return game_state, player
 
@@ -17,9 +17,9 @@ def draw_card_from_deck(
 def draw_card_from_open_staple(
     game: GameState, player: Player
 ) -> Tuple[GameState, Player]:
-    drawn = game.card_deck.cards_in_deck[-1]
+    drawn = game.open_staple.cards_on_staple[-1]
     player.card_in_hand = drawn
-    game.card_deck.cards_in_deck = game.card_deck.cards_in_deck[:-1]
+    game.open_staple.cards_on_staple = game.open_staple.cards_on_staple[:-1]
     player.card_in_hand = drawn
     return game, player
 

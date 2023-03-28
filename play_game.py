@@ -45,6 +45,8 @@ def play_game():
 
             for draw in range(allowed_draws):
                 decision = game.random_generator.choice(play_options)
+                if draw == 1:
+                    game, player = draw_card_from_deck(game, player)
                 if decision == "move_to_open_staple":
                     game, player = move_card_from_hand_to_open_staple(game, player)
                 elif (
@@ -103,10 +105,10 @@ def play_game():
     for idx, player in enumerate(game.player_order):
         for card_idx, card in enumerate(player.cards):
             while card.card_type != "number":
-                print()
                 game, player = draw_card_from_deck(game, player)
-                if player.card_in_hand == "number":
-                    player, game = exchange_card(player, idx, game)
+                if player.card_in_hand.card_type == "number":
+                    print("Exchange")
+                    player, game = exchange_card(player, card_idx, game)
                     card = player.cards[card_idx]
                 else:
                     game, player = move_card_from_hand_to_open_staple(game, player)
@@ -123,7 +125,7 @@ def play_game():
             best_player = player.name
         print(f"Player {player.name} achieved {pts} points.")
 
-    print(f"Congratulations! Player {best_player} has won with {lowest_pts} points after {game.turn} turns.")
+    print(f"Congratulations! Player {best_player} has won with {lowest_pts} points after {game.turn - 1} turns.")
 
 
 if __name__ == "__main__":
