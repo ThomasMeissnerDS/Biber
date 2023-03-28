@@ -18,7 +18,7 @@ PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
 
 
 def play_game():
-    game = GameState(random_seed=1, nb_players=4)
+    game = GameState(random_seed=7, nb_players=4)
     game = prepare_game(game)
     while game.game_status != "finished":
         game = make_turn(game)
@@ -103,7 +103,7 @@ def play_game():
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
     print("Exchange remaining special cards with numeric cards.")
     for idx, player in enumerate(game.player_order):
-        print([c.value for c in player.cards])
+        # print([c.value for c in player.cards])
         for card_idx, card in enumerate(player.cards):
             while card.card_type != "number":
                 game, player = draw_card_from_deck(game, player)
@@ -117,16 +117,23 @@ def play_game():
     # counting all players' points
     results = {}
     lowest_pts = 99
-    best_player = ""
+    best_player = []
     for player in game.player_order:
         pts = player.calc_final_points()
         results[player.name] = pts
-        if pts < lowest_pts:
+        if pts < lowest_pts and len(best_player) == 0:
             lowest_pts = pts
-            best_player = player.name
+            best_player = [player.name]
+        elif pts == lowest_pts and len(best_player) >= 1:
+            best_player.append(player.name)
         print(f"Player {player.name} achieved {pts} points.")
 
-    print(f"Congratulations! Player {best_player} has won with {lowest_pts} points after {game.turn - 1} turns.")
+    if len(best_player) == 1:
+        print(f"Congratulations! Player {best_player[0]} has won with {lowest_pts} points after {game.turn - 1} turns.")
+    else:
+        print(f"Congratulations! The following players have won with {lowest_pts} points after {game.turn - 1} turns:")
+        for player in best_player:
+            print(f"{player}")
 
 
 if __name__ == "__main__":
