@@ -11,7 +11,9 @@ from base_classes.game_state import GameState
 
 PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
     "number": ["move_to_open_staple", "exchange_with_own_card"],
-    "other": ["move_to_open_staple", "use_special_card"],
+    "trade": ["move_to_open_staple", "use_special_card"],
+    "reveal": ["move_to_open_staple", "use_special_card"],
+    "double_turn": ["move_to_open_staple", "use_special_card"],
 }
 
 
@@ -95,6 +97,7 @@ def play_game():
             game.player_order[idx] = player
 
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
+    print("Exchange remaining special cards with numeric cards.")
     for idx, player in enumerate(game.player_order):
         for card in player.cards:
             while card.card_type != "number":

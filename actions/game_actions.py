@@ -1,4 +1,4 @@
-from actions.card_actions import add_card_to_seen
+from actions import card_actions
 
 from base_classes.game_state import GameState
 from base_classes.players import Player
@@ -28,9 +28,10 @@ def move_top_card_from_deck_to_staple(game_state: GameState) -> GameState:
     card = game_state.card_deck.cards_in_deck[-1]  # take top card
     game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
 
-    game_state.open_staple.cards_on_staple.append(card)
     for player in game_state.players:
-        player, card = add_card_to_seen(player, card)
+        card = card_actions.add_card_to_seen(player, card)
+
+    game_state.open_staple.cards_on_staple.append(card)
     return game_state
 
 
