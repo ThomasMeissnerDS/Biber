@@ -18,9 +18,8 @@ PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
 
 
 def play_game():
-    game = GameState(random_seed=1, nb_players=4)
+    game = GameState(random_seed=2, nb_players=4)
     game = prepare_game(game)
-    print(game.players)
     while game.game_status != "finished":
         game = make_turn(game)
         for idx, player in enumerate(game.player_order):
@@ -55,6 +54,7 @@ def play_game():
                     idx_decision = game.random_generator.choice([i for i in range(4)])
                     player, game = exchange_card(player, idx_decision, game)
                     del idx_decision
+                    break
                 elif (
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "trade"
@@ -77,6 +77,7 @@ def play_game():
                     del idx_decision
                     del target_idx_decision
                     del opponent_decision
+                    break
                 elif (
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "double_turn"
@@ -91,6 +92,7 @@ def play_game():
                     idx_decision = game.random_generator.choice([i for i in range(4)])
                     player, game = reveal_card(player, game, idx_decision)
                     del idx_decision
+                    break
 
                 del decision
 
@@ -99,11 +101,13 @@ def play_game():
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
     print("Exchange remaining special cards with numeric cards.")
     for idx, player in enumerate(game.player_order):
-        for card in player.cards:
+        for card_idx, card in enumerate(player.cards):
             while card.card_type != "number":
+                print()
                 game, player = draw_card_from_deck(game, player)
                 if player.card_in_hand == "number":
                     player, game = exchange_card(player, idx, game)
+                    card = player.cards[card_idx]
                 else:
                     game, player = move_card_from_hand_to_open_staple(game, player)
 
