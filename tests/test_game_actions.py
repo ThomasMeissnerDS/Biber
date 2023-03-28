@@ -1,5 +1,6 @@
-from actions.game_actions import prepare_game, next_player_idx
 import pytest
+
+from actions.game_actions import next_player_idx, prepare_game
 from tests.general_fixtures import game
 
 
@@ -19,4 +20,6 @@ def test_next_player_idx(game):
     game = next_player_idx(game)
     assert game.player_in_action_idx == 3
     game = next_player_idx(game)
-    assert game.player_in_action_idx == 0  # if not 0 then list index is exhausted and the game crashes
+    assert (
+        game.player_in_action_idx == 0
+    )  # if not 0 then list index is exhausted and the game crashes

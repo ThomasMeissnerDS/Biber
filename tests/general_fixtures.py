@@ -1,5 +1,6 @@
-from base_classes.game_state import GameState
 import pytest
+
+from base_classes.game_state import GameState
 
 
 @pytest.fixture

@@ -1,9 +1,11 @@
-from base_classes.players import Player
+import random
+from typing import List, Literal, Optional
+
+import numpy as np
+
 from base_classes.cards import Card
 from base_classes.deck import CardDeck, OpenStaple
-import numpy as np
-import random
-from typing import List, Optional, Literal
+from base_classes.players import Player
 
 
 class GameState:
@@ -22,17 +24,36 @@ class GameState:
 
     def fill_deck(self):
         # fill number cards into deck
-        [self.card_deck.cards_in_deck.append(Card(card_type="number", value=val)) for val in range(9) for _i in range(4)]
-        [self.card_deck.cards_in_deck.append(Card(card_type="number", value=9)) for _i in range(9)]
+        [
+            self.card_deck.cards_in_deck.append(Card(card_type="number", value=val))
+            for val in range(9)
+            for _i in range(4)
+        ]
+        [
+            self.card_deck.cards_in_deck.append(Card(card_type="number", value=9))
+            for _i in range(9)
+        ]
         # fill in special cards
-        [self.card_deck.cards_in_deck.append(Card(card_type="double_turn", value=0)) for _i in range(5)]
-        [self.card_deck.cards_in_deck.append(Card(card_type="trade", value=0)) for _i in range(9)]
-        [self.card_deck.cards_in_deck.append(Card(card_type="reveal", value=0)) for _i in range(7)]
+        [
+            self.card_deck.cards_in_deck.append(Card(card_type="double_turn", value=0))
+            for _i in range(5)
+        ]
+        [
+            self.card_deck.cards_in_deck.append(Card(card_type="trade", value=0))
+            for _i in range(9)
+        ]
+        [
+            self.card_deck.cards_in_deck.append(Card(card_type="reveal", value=0))
+            for _i in range(7)
+        ]
 
         random.shuffle(self.card_deck.cards_in_deck)
 
     def create_players(self):
-        [self.players.append(Player(name=f"player_{player}")) for player in range(self.nb_players)]
+        [
+            self.players.append(Player(name=f"player_{player}"))
+            for player in range(self.nb_players)
+        ]
 
     def evaluate_game(self):
         pass

@@ -1,5 +1,6 @@
-from base_classes.cards import Card
 from typing import List, Optional
+
+from base_classes.cards import Card
 
 
 class CardDeck:
