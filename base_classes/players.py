@@ -20,3 +20,14 @@ class Player:
                 raise ValueError("Passed object is not of type Card.")
 
         return total_value
+
+    def calc_final_points(self) -> int:
+        total_value: int = 0
+        for idx, c in enumerate(self.cards):
+            if isinstance(c, cards.Card):
+                if c.card_type == "number":
+                    total_value += c.value
+            else:
+                raise ValueError("Passed object is not of type Card.")
+
+        return total_value

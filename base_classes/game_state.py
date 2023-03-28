@@ -47,7 +47,7 @@ class GameState:
             for _i in range(7)
         ]
 
-        self.card_deck.cards_in_deck = self.random_generator.choice(self.card_deck.cards_in_deck, len(self.card_deck.cards_in_deck)).tolist()
+        self.card_deck.cards_in_deck = self.random_generator.choice(self.card_deck.cards_in_deck, len(self.card_deck.cards_in_deck), replace=False).tolist()
 
     def create_players(self):
         [

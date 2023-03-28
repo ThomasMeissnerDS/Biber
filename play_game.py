@@ -18,7 +18,7 @@ PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
 
 
 def play_game():
-    game = GameState(random_seed=2, nb_players=4)
+    game = GameState(random_seed=1, nb_players=4)
     game = prepare_game(game)
     while game.game_status != "finished":
         game = make_turn(game)
@@ -103,6 +103,7 @@ def play_game():
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
     print("Exchange remaining special cards with numeric cards.")
     for idx, player in enumerate(game.player_order):
+        print([c.value for c in player.cards])
         for card_idx, card in enumerate(player.cards):
             while card.card_type != "number":
                 game, player = draw_card_from_deck(game, player)
@@ -118,7 +119,7 @@ def play_game():
     lowest_pts = 99
     best_player = ""
     for player in game.player_order:
-        pts = player.calc_points_in_front()
+        pts = player.calc_final_points()
         results[player.name] = pts
         if pts < lowest_pts:
             lowest_pts = pts

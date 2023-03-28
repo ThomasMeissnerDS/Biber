@@ -49,7 +49,7 @@ def fill_player_hands(game_state: GameState) -> GameState:
 
 
 def set_player_order(game: GameState) -> GameState:
-    game.player_order = game.random_generator.choice(game.players, 4).tolist()
+    game.player_order = game.random_generator.choice(game.players, game.nb_players, replace=False).tolist()
     return game
 
 
