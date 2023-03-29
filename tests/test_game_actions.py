@@ -12,7 +12,7 @@ def test_prepare_game(game):
 
 def test_fll_deck(game):
     game = game.fill_deck()
-    assert len(game.card_deck.cards_in_deck) == 45
+    assert len(game.card_deck.cards_in_deck) == 66
 
 
 def test_next_player_idx(game):
