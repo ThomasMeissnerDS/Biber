@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from actions.game_actions import next_player_idx
+from actions import game_actions
 from base_classes.game_state import GameState
 from base_classes.players import Player
 
@@ -33,7 +33,7 @@ def move_card_from_hand_to_open_staple(
 
 
 def pass_turn(game_state: GameState) -> GameState:
-    game_state = next_player_idx(game_state)
+    game_state = game_actions.next_player_idx(game_state)
     return game_state
 
 
