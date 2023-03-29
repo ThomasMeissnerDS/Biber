@@ -1,4 +1,5 @@
-from base_classes.cards import Card
+from actions import card_actions
+
 from base_classes.game_state import GameState
 from base_classes.players import Player
 
@@ -16,34 +17,54 @@ def next_player_idx(game_state: GameState) -> GameState:
     return game_state
 
 
-def move_card_from_deck_to_player(game_state: GameState, player: Player):
-    sel_card = game_state.card_deck.cards_in_deck[-1]   # take top card
+def move_card_from_deck_to_player(game_state: GameState, player: Player) -> GameState:
+    sel_card = game_state.card_deck.cards_in_deck[-1]  # take top card
     game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
     player.cards.append(sel_card)
     return game_state
 
 
-def fill_player_hands(game_state: GameState):
+def move_top_card_from_deck_to_staple(game_state: GameState) -> GameState:
+    card = game_state.card_deck.cards_in_deck[-1]  # take top card
+    game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
+
+    for player in game_state.players:
+        card = card_actions.add_card_to_seen(player, card)
+
+    game_state.open_staple.cards_on_staple.append(card)
+    return game_state
+
+
+def fill_player_hands(game_state: GameState) -> GameState:
     # every player gets 4 cards
     for i in range(4):
         for idx in range(game_state.nb_players):
-            game_state = move_card_from_deck_to_player(game_state, game_state.players[idx])
+            player = game_state.players[idx]
+            if isinstance(player, Player):
+                game_state = move_card_from_deck_to_player(game_state, player)
+            else:
+                raise ValueError("Type of objects passed must be of GameState.")
 
     return game_state
 
 
-def prepare_game(game: GameState):
-    game.fill_deck()
-    game.create_players()
-    game = fill_player_hands(game)
+def set_player_order(game: GameState) -> GameState:
+    game.player_order = game.random_generator.choice(game.players, game.nb_players, replace=False).tolist()
     return game
 
 
-def make_turn(game_state: GameState):
+def prepare_game(game: GameState) -> GameState:
+    game.fill_deck()
+    game.create_players()
+    game = set_player_order(game)
+    game = fill_player_hands(game)
+    game = move_top_card_from_deck_to_staple(game)
+    return game
+
+
+def make_turn(game_state: GameState) -> GameState:
     game_state.turn += 1
     if game_state.turn > game_state.max_turns:
         game_state.game_status = "finished"
 
     return game_state
-
-

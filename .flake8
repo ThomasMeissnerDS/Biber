@@ -1,0 +1,22 @@
+[flake8]
+extend-exclude="tests/"
+max-line-length = 160
+max-doc-length = 160
+max-complexity = 18
+select = B,C,E,F,W,T4,B9
+exclude = tests/
+ignore =
+    # These rules clash with black
+    # (https://github.com/psf/black/blob/main/.flake8)
+    # https://github.com/psf/black/issues/52
+    E203,
+    E266,
+    E501,
+    B902,
+    W503,
+    B023,
+    # This is flake8-bugbear's "line too long" rule.
+    # Since black enforces line lengths, we don't need to lint it
+    B950,
+    F401,F811 tests/test_game_actions.py
+    B903 tests/dummy_objects.py
