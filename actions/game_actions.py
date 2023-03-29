@@ -3,10 +3,37 @@ from actions import card_actions
 from base_classes.game_state import GameState
 from base_classes.players import Player
 
+from typing import Dict, Tuple
+
 
 def create_game():
     new_game = GameState(random_seed=1, nb_players=4)
     return new_game
+
+
+def calc_value_of_own_known_cards(player: Player) -> Tuple[Dict[int, int], Dict[str, int]]:
+    num_cards_seen = {}
+    for card in range(1, 9):
+        num_cards_seen[card] = 0
+
+    special_cards = ["double_turn", "trade", "reveal"]
+    special_cards_seen = {}
+    for card in special_cards:
+        special_cards_seen[card] = 0
+
+    # calculate value of known card in front of player
+    for idx, seen in enumerate(player.cards_seen):
+        if seen and player.cards[idx].card_type == "number":
+            num_cards_seen[player.cards[idx].value] += 1
+        elif seen and player.cards[idx].card_type in special_cards:
+            special_cards_seen[player.cards[idx].card_type] += 1
+
+    return num_cards_seen, special_cards_seen
+
+
+def get_state_from_player_perspective(player: Player):
+    num_cards_seen, special_cards_seen = calc_value_of_own_known_cards(player)
+    pass  # TODO: Add values from open staple and other players already seen cards
 
 
 def next_player_idx(game_state: GameState) -> GameState:
