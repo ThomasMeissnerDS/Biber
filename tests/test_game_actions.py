@@ -9,6 +9,11 @@ def test_prepare_game(game):
         assert len(player.cards) == 4
 
 
+def test_fll_deck(game):
+    game = game.fill_deck()
+    assert len(game.card_deck.cards_in_deck) == 45
+
+
 def test_next_player_idx(game):
     game = prepare_game(game)
     assert game.player_in_action_idx == 0
