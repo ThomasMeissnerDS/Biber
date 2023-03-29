@@ -10,7 +10,7 @@ def test_prepare_game(game):
         assert len(player.cards) == 4
 
 
-def test_fll_deck(game):
+def test_fill_deck(game):
     game.fill_deck()
     assert len(game.card_deck.cards_in_deck) == 66
 
