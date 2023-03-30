@@ -129,13 +129,16 @@ def play_game():
         print(f"Player {player.name} achieved {pts} points.")
 
     if len(best_player) == 1:
-        print(f"Congratulations! Player {best_player[0]} has won with {lowest_pts} points after {game.turn - 1} turns.")
+        print(
+            f"Congratulations! Player {best_player[0]} has won with {lowest_pts} points after {game.turn - 1} turns."
+        )
     else:
-        print(f"Congratulations! The following players have won with {lowest_pts} points after {game.turn - 1} turns:")
+        print(
+            f"Congratulations! The following players have won with {lowest_pts} points after {game.turn - 1} turns:"
+        )
         for player in best_player:
             print(f"{player}")
 
 
 if __name__ == "__main__":
     play_game()
-
