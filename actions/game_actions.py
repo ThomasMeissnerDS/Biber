@@ -64,9 +64,15 @@ def calc_value_of_seen_cards(
     for pl in game_state.players:
         if pl != player:  # type: ignore
             for the_card in pl.cards:  # type: ignore
-                if the_card.card_type == "number" and player in the_card.seen_already_by:
+                if (
+                    the_card.card_type == "number"  # type: ignore
+                    and player in the_card.seen_already_by  # type: ignore
+                ):
                     num_cards_seen[the_card.value] += 1  # type: ignore
-                elif the_card.card_type in special_cards and player in the_card.seen_already_by:
+                elif (
+                    the_card.card_type in special_cards  # type: ignore
+                    and player in the_card.seen_already_by  # type: ignore
+                ):
                     special_cards_seen[the_card.card_type] += 1  # type: ignore
 
     return num_cards_seen, special_cards_seen, special_cards
@@ -123,7 +129,7 @@ def next_player_idx(game_state: GameState) -> GameState:
 def move_card_from_deck_to_player(
     game_state: GameState, player: Player, idx: int
 ) -> GameState:
-    sel_card: Card = game_state.card_deck.cards_in_deck[-1]  # take top card
+    sel_card: Card = game_state.card_deck.cards_in_deck[-1]  # type: ignore  # take top card
     game_state.card_deck.cards_in_deck = game_state.card_deck.cards_in_deck[:-1]
     player.cards.append(sel_card)
     game_state.players[idx] = player

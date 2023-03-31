@@ -26,7 +26,10 @@ def reveal_card(player: Player, game: GameState, hand_idx) -> Tuple[Player, Game
 def exchange_card(
     player: Player, hand_idx, game_state: GameState
 ) -> Tuple[Player, GameState]:
-    player.cards[hand_idx], player.card_in_hand = player.card_in_hand, player.cards[hand_idx]
+    player.cards[hand_idx], player.card_in_hand = (
+        player.card_in_hand,
+        player.cards[hand_idx],
+    )
     game_state, player = move_card_from_hand_to_open_staple(game_state, player)
     # everyone has seen that card now
     for pl in game_state.players:

@@ -12,6 +12,7 @@ from actions.player_actions import (
     move_card_from_hand_to_open_staple,
 )
 from base_classes.game_state import GameState
+from base_classes.checkpoints import CheckPointDecisions
 
 PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
     "number": ["move_to_open_staple", "exchange_with_own_card"],
@@ -23,6 +24,7 @@ PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
 
 def play_game():
     print("Start a new game")
+    checkpoint_decisions = CheckPointDecisions()
     game = GameState(random_seed=7, nb_players=4)
     game = prepare_game(game)
     while game.game_status != "finished":
@@ -30,8 +32,8 @@ def play_game():
         for idx, player in enumerate(game.player_order):
             print("---------------------------")
             print([(c.card_type, c.value) for c in player.cards])
-            # decide to draw from deck or open staple
-            draw_options = ["deck", "open_staple"]
+            # decide to draw from deck or open staple -> checkpoint: "draw_card"
+            draw_options = checkpoint_decisions.check_point_decisions["draw_card"]
             game_state_labels, game_state_values = get_state_from_player_perspective(
                 player, game
             )
@@ -53,7 +55,9 @@ def play_game():
 
             # card moved to player and player can decide how to proceed
 
-            play_options = PLAY_OPTIONS_MAPPING[player.card_in_hand.card_type]
+            play_options = PLAY_OPTIONS_MAPPING[
+                player.card_in_hand.card_type
+            ]  # checkpoint: "play_or_discard #TODO: ADJUST TO ACCOUNT FOR CARD TYPE: checkpoint_decisions.check_point_decisions["play_or_discard"]
 
             for draw in range(allowed_draws):
                 decision = game.random_generator.choice(play_options)
