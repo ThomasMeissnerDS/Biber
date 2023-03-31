@@ -28,6 +28,8 @@ def play_game():
     while game.game_status != "finished":
         game = make_turn(game)
         for idx, player in enumerate(game.player_order):
+            print("---------------------------")
+            print([(c.card_type, c.value) for c in player.cards])
             # decide to draw from deck or open staple
             draw_options = ["deck", "open_staple"]
             game_state_labels, game_state_values = get_state_from_player_perspective(
@@ -113,7 +115,6 @@ def play_game():
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
     print("Exchange remaining special cards with numeric cards.")
     for idx, player in enumerate(game.player_order):
-        # print([c.value for c in player.cards])
         for card_idx, card in enumerate(player.cards):
             while card.card_type != "number":
                 game, player = draw_card_from_deck(game, player)
@@ -130,10 +131,10 @@ def play_game():
     for player in game.player_order:
         pts = player.calc_final_points()
         results[player.name] = pts
-        if pts < lowest_pts and len(best_player) == 0:
+        if pts < lowest_pts:
             lowest_pts = pts
             best_player = [player.name]
-        elif pts == lowest_pts and len(best_player) >= 1:
+        elif pts == lowest_pts:
             best_player.append(player.name)
         print(f"Player {player.name} achieved {pts} points.")
 
