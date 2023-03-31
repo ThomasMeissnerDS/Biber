@@ -22,6 +22,7 @@ PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
 
 
 def play_game():
+    print("Start a new game")
     game = GameState(random_seed=7, nb_players=4)
     game = prepare_game(game)
     while game.game_status != "finished":
@@ -32,7 +33,6 @@ def play_game():
             game_state_labels, game_state_values = get_state_from_player_perspective(
                 player, game
             )
-            print(player.cards_seen)
             decision = game.random_generator.choice(draw_options)
             allowed_draws = 1
 
@@ -43,8 +43,6 @@ def play_game():
                     allowed_draws += 1
             elif decision == "open_staple":
                 game, player = draw_card_from_open_staple(game, player)
-
-            print(decision)
 
             del draw_options
             del decision
@@ -120,7 +118,6 @@ def play_game():
             while card.card_type != "number":
                 game, player = draw_card_from_deck(game, player)
                 if player.card_in_hand.card_type == "number":
-                    print("Exchange")
                     player, game = exchange_card(player, card_idx, game)
                     card = player.cards[card_idx]
                 else:

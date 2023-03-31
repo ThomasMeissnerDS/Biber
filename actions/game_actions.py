@@ -37,7 +37,6 @@ def calc_value_of_own_known_cards(
                 num_cards_seen[the_card.value] += 1
             elif seen and the_card.card_type in special_cards:
                 special_cards_seen[the_card.card_type] += 1
-                print(True)
 
     return num_cards_seen, special_cards_seen, special_cards
 
@@ -69,7 +68,6 @@ def calc_value_of_seen_cards(
                     num_cards_seen[the_card.value] += 1  # type: ignore
                 elif the_card.card_type in special_cards and player in the_card.seen_already_by:
                     special_cards_seen[the_card.card_type] += 1  # type: ignore
-                    print(True)
 
     return num_cards_seen, special_cards_seen, special_cards
 
