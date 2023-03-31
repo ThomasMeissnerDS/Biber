@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal, Tuple
+from typing import Dict, List, Literal, Tuple, Union
 
 from actions import card_actions
 from base_classes.cards import Card
@@ -13,7 +13,7 @@ def create_game():
 
 def calc_value_of_own_known_cards(
     player: Player,
-) -> Tuple[Dict[int, int], Dict[str, int]]:
+) -> Tuple[Dict[int, int], Dict[str, int], List[str]]:
     num_cards_seen = {}
     for card in range(1, 9):
         num_cards_seen[card] = 0
@@ -38,12 +38,14 @@ def calc_value_of_own_known_cards(
             elif seen and the_card.card_type in special_cards:
                 special_cards_seen[the_card.card_type] += 1
 
-    return num_cards_seen, special_cards_seen
+    return num_cards_seen, special_cards_seen, special_cards
 
 
 def calc_value_of_seen_cards(
     player: Player, game_state: GameState
-) -> Tuple[Dict[int, int], Dict[str, int]]:
+) -> Tuple[
+    Dict[int, int], Dict[str, int], List[Literal["double_turn", "trade", "reveal"]]
+]:
     num_cards_seen = {}
     for card in range(1, 9):
         num_cards_seen[card] = 0
@@ -71,13 +73,40 @@ def calc_value_of_seen_cards(
                 ]:
                     special_cards_seen[the_card.card_type] += 1  # type: ignore
 
-    return num_cards_seen, special_cards_seen
+    return num_cards_seen, special_cards_seen, special_cards
 
 
-def get_state_from_player_perspective(player: Player, game_state: GameState):
-    num_cards_seen, special_cards_seen = calc_value_of_own_known_cards(player)
-    num_cards_seen, special_cards_seen = calc_value_of_seen_cards(player, game_state)
-    pass  # TODO: Add values from open staple and other players already seen cards
+def get_state_from_player_perspective(
+    player: Player, game_state: GameState
+) -> Tuple[List[Union[int, str]], List[int]]:
+    (
+        own_cards_seen,
+        own_special_cards_seen,
+        special_cards_labels,
+    ) = calc_value_of_own_known_cards(player)
+    (
+        num_cards_seen,
+        special_cards_seen,
+        _special_cards_labels,
+    ) = calc_value_of_seen_cards(player, game_state)
+    game_state_labels: List[Union[int, str]] = [num for num in range(1, 9)]
+    for card in special_cards_labels:
+        game_state_labels.append(card)
+
+    game_state_values = []
+    for card_val in game_state_labels:
+        if isinstance(card_val, int):
+            game_state_values.append(num_cards_seen[card_val])
+            game_state_values.append(own_cards_seen[card_val])
+        elif isinstance(card_val, str):
+            game_state_values.append(special_cards_seen[card_val])
+            game_state_values.append(own_special_cards_seen[card_val])
+
+    # add info about which turn we have
+    game_state_labels.append("turn")
+    game_state_values.append(game_state.turn)
+
+    return game_state_labels, game_state_values
 
 
 def next_player_idx(game_state: GameState) -> GameState:
