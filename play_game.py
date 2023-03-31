@@ -1,7 +1,11 @@
 from typing import Dict, List
 
 from actions.card_actions import exchange_card, reveal_card, trade_card
-from actions.game_actions import make_turn, prepare_game
+from actions.game_actions import (
+    get_state_from_player_perspective,
+    make_turn,
+    prepare_game,
+)
 from actions.player_actions import (
     draw_card_from_deck,
     draw_card_from_open_staple,
@@ -25,6 +29,10 @@ def play_game():
         for idx, player in enumerate(game.player_order):
             # decide to draw from deck or open staple
             draw_options = ["deck", "open_staple"]
+            game_state_labels, game_state_values = get_state_from_player_perspective(
+                player, game
+            )
+            print(player.cards_seen)
             decision = game.random_generator.choice(draw_options)
             allowed_draws = 1
 
@@ -36,8 +44,12 @@ def play_game():
             elif decision == "open_staple":
                 game, player = draw_card_from_open_staple(game, player)
 
+            print(decision)
+
             del draw_options
             del decision
+            del game_state_labels
+            del game_state_values
 
             # card moved to player and player can decide how to proceed
 
@@ -66,7 +78,7 @@ def play_game():
                         [i for i in range(4)]
                     )
                     opponent_decision = game.random_generator.choice(
-                        [p for p in game.players if p.name != player.name]
+                        [p for p in game.players if p != player]
                     )
                     player, target_player, game_state = trade_card(
                         player,
