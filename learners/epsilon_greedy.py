@@ -45,3 +45,9 @@ class EpsilonGreedy:
         self.avg_impact_state_estimation[action_idx] = (
             self.total_impact_state_estimation[action_idx] / self.nb_actions_triggered[action_idx]
             )
+
+
+class EpsilonGreedyPlayer:
+    def __init__(self, checkpoints):
+        self.checkpoints: List[str] = checkpoints
+        self.bandits: List[EpsilonGreedy] = None  # Todo: Define the list comprehension or loop
