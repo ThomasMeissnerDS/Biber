@@ -21,6 +21,10 @@ class EpsilonGreedy:
         self.random_seed: int = random_seed
         self.random_generator = np.random.default_rng(self.random_seed)
 
+    def update_random_generator(self):
+        self.random_seed += 1
+        self.random_generator = np.random.default_rng(self.random_seed)
+
     def _get_best_arm(self) -> int:
         arm_index = np.argmax(np.asarray(self.avg_impact_state_estimation), axis=0)
         return arm_index
@@ -39,6 +43,7 @@ class EpsilonGreedy:
 
     def chose_action(self):
         action_idx: int = self._select_pull_mechanism()
+        self.update_random_generator()
         return self.actions[action_idx]
 
     def update_bandit(self, action_idx: int, game_state_impact):
@@ -50,6 +55,16 @@ class EpsilonGreedy:
 
 
 class EpsilonGreedyPlayer:
-    def __init__(self, checkpoints: checkpoints.CheckPointDecisions):
+    """
+    Wrapper class representing a player.
+
+    This player contains a separate multiarmed bandit for each individual checkpoint.
+    """
+    def __init__(self, checkpoints: checkpoints.CheckPointDecisions, random_seed: int=1):
         self.checkpoints: checkpoints.CheckPointDecisions = checkpoints
-        self.bandits: List[EpsilonGreedy] = None  # Todo: Define the list comprehension or loop
+        self.checkpoint_bandits = {}
+        for checkpoint, actions in self.checkpoints.items():
+            self.checkpoint_bandits[checkpoint] = EpsilonGreedy(
+            actions=self.checkpoint_bandits[actions],
+            random_seed=random_seed
+            )
