@@ -1,3 +1,5 @@
+from base_classes import checkpoints
+
 import random
 
 from typing import List
@@ -48,6 +50,6 @@ class EpsilonGreedy:
 
 
 class EpsilonGreedyPlayer:
-    def __init__(self, checkpoints):
-        self.checkpoints: List[str] = checkpoints
+    def __init__(self, checkpoints: checkpoints.CheckPointDecisions):
+        self.checkpoints: checkpoints.CheckPointDecisions = checkpoints
         self.bandits: List[EpsilonGreedy] = None  # Todo: Define the list comprehension or loop

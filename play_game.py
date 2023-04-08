@@ -54,10 +54,7 @@ def play_game():
             del game_state_values
 
             # card moved to player and player can decide how to proceed
-
-            play_options = PLAY_OPTIONS_MAPPING[
-                player.card_in_hand.card_type
-            ]  # checkpoint: "play_or_discard #TODO: ADJUST TO ACCOUNT FOR CARD TYPE: checkpoint_decisions.check_point_decisions["play_or_discard"]
+            play_options = checkpoint_decisions.check_point_decisions["play_or_discard"][player.card_in_hand.card_type]
 
             for draw in range(allowed_draws):
                 decision = game.random_generator.choice(play_options)
