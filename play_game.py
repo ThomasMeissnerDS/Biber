@@ -11,8 +11,8 @@ from actions.player_actions import (
     draw_card_from_open_staple,
     move_card_from_hand_to_open_staple,
 )
-from base_classes.game_state import GameState
 from base_classes.checkpoints import CheckPointDecisions
+from base_classes.game_state import GameState
 
 PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
     "number": ["move_to_open_staple", "exchange_with_own_card"],
@@ -54,7 +54,9 @@ def play_game():
             del game_state_values
 
             # card moved to player and player can decide how to proceed
-            play_options = checkpoint_decisions.check_point_decisions["play_or_discard"][player.card_in_hand.card_type]
+            play_options = checkpoint_decisions.check_point_decisions[
+                "play_or_discard"
+            ][player.card_in_hand.card_type]
 
             for draw in range(allowed_draws):
                 decision = game.random_generator.choice(play_options)
