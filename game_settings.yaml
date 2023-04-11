@@ -4,3 +4,8 @@ player_settings:
     player_2:
     player_3:
     player_4:
+  decision_logic:
+    player_1: "random"
+    player_2: "random"
+    player_3: "random"
+    player_4: "epsilon-greedy"

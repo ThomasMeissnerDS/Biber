@@ -4,8 +4,10 @@ from typing import List, Literal, Optional
 import numpy as np
 
 from base_classes.cards import Card
+from base_classes.checkpoints import CheckPointDecisions
 from base_classes.deck import CardDeck, OpenStaple
 from base_classes.players import Player
+from learners.epsilon_greedy import EpsilonGreedyPlayer
 from learners.learner_utils import load_model
 
 
@@ -16,6 +18,7 @@ class GameState:
         nb_players: int,
         max_turns: int = 10,
         player_configs: Optional[List[str]] = None,
+        player_decision_logic: Optional[List[str]] = None,
     ):
         self.turn = 0
         self.max_turns = max_turns
@@ -26,6 +29,11 @@ class GameState:
 
         if not isinstance(player_configs, list):
             self.player_configs: List[str] = ["None" for _p in range(self.nb_players)]
+
+        if not isinstance(player_decision_logic, list):
+            self.player_decision_logic: List[str] = [
+                "random" for _p in range(self.nb_players)
+            ]
 
         self.card_deck: CardDeck = CardDeck()
         self.open_staple: OpenStaple = OpenStaple()
@@ -65,8 +73,20 @@ class GameState:
         ).tolist()
 
     def create_players(self):
+        check_pts = CheckPointDecisions()
+
         for player_nb, conf in enumerate(self.player_configs):
             if self.player_configs[player_nb] == "None":
-                self.players.append(Player(name=f"player_{player_nb}"))
+                player = Player(
+                    name=f"player_{player_nb}",
+                    decision_policy=self.player_decision_logic[player_nb],
+                )
+                if player.decision_policy == "random":
+                    pass
+                elif player.decision_policy == "epsilon-greedy":
+                    player.decider = EpsilonGreedyPlayer(
+                        checkpts=check_pts, random_seed=self.random_seed
+                    )
+                self.players.append(player)
             else:
                 self.players.append(load_model(conf))

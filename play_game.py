@@ -14,7 +14,6 @@ from actions.player_actions import (
 from base_classes.checkpoints import CheckPointDecisions
 from base_classes.game_state import GameState
 from general_utils import config_loader
-
 from learners.learner_utils import save_model
 
 

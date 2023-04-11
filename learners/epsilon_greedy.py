@@ -71,4 +71,3 @@ class EpsilonGreedyPlayer:
             self.checkpoint_bandits[checkpoint] = EpsilonGreedy(
                 actions=self.checkpoint_bandits[actions], random_seed=random_seed
             )
-        self.save_state_ai: str = "None"
