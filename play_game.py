@@ -14,6 +14,7 @@ from actions.player_actions import (
 from base_classes.checkpoints import CheckPointDecisions
 from base_classes.game_state import GameState
 
+
 PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
     "number": ["move_to_open_staple", "exchange_with_own_card"],
     "trade": ["move_to_open_staple", "use_special_card"],
