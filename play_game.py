@@ -13,20 +13,19 @@ from actions.player_actions import (
 )
 from base_classes.checkpoints import CheckPointDecisions
 from base_classes.game_state import GameState
-
-
-PLAY_OPTIONS_MAPPING: Dict[str, List[str]] = {
-    "number": ["move_to_open_staple", "exchange_with_own_card"],
-    "trade": ["move_to_open_staple", "use_special_card"],
-    "reveal": ["move_to_open_staple", "use_special_card"],
-    "double_turn": ["move_to_open_staple", "use_special_card"],
-}
+from general_utils import config_loader
 
 
 def play_game():
     print("Start a new game")
     checkpoint_decisions = CheckPointDecisions()
-    game = GameState(random_seed=7, nb_players=4)
+    game_config = config_loader.load_conf_file("game_settings.yaml")
+
+    game = GameState(
+        random_seed=7,
+        nb_players=4,
+        player_configs=game_config["player_settings"]["save_states"],
+    )
     game = prepare_game(game)
     while game.game_status != "finished":
         game = make_turn(game)

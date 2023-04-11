@@ -6,16 +6,27 @@ import numpy as np
 from base_classes.cards import Card
 from base_classes.deck import CardDeck, OpenStaple
 from base_classes.players import Player
+from learners.learner_utils import load_model
 
 
 class GameState:
-    def __init__(self, random_seed: int, nb_players: int, max_turns: int = 10):
+    def __init__(
+        self,
+        random_seed: int,
+        nb_players: int,
+        max_turns: int = 10,
+        player_configs: Optional[List[str]] = None,
+    ):
         self.turn = 0
         self.max_turns = max_turns
         self.nb_players: int = nb_players
         self.players: List[Optional[Player]] = []
         self.player_in_action_idx: int = 0
         self.player_order: Optional[List[Player]] = None
+
+        if not isinstance(player_configs, list):
+            self.player_configs: List[str] = ["None" for _p in range(self.nb_players)]
+
         self.card_deck: CardDeck = CardDeck()
         self.open_staple: OpenStaple = OpenStaple()
         self.random_seed: int = random_seed
@@ -54,10 +65,8 @@ class GameState:
         ).tolist()
 
     def create_players(self):
-        [
-            self.players.append(Player(name=f"player_{player}"))
-            for player in range(self.nb_players)
-        ]
-
-    def evaluate_game(self):
-        pass
+        for player_nb, conf in enumerate(self.player_configs):
+            if self.player_configs[player_nb] == "None":
+                self.players.append(Player(name=f"player_{player_nb}"))
+            else:
+                self.players.append(load_model(conf))
