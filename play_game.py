@@ -15,6 +15,8 @@ from base_classes.checkpoints import CheckPointDecisions
 from base_classes.game_state import GameState
 from general_utils import config_loader
 
+from learners.learner_utils import save_model
+
 
 def play_game():
     print("Start a new game")
@@ -113,7 +115,10 @@ def play_game():
 
                 del decision
 
-            game.player_order[idx] = player
+            if game.player_configs[idx] == "None":
+                pass
+            else:
+                save_model(game.player_configs[idx], player)
 
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
     print("Exchange remaining special cards with numeric cards.")
