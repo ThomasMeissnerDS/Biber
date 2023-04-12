@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from base_classes import cards  # noqa: F403
 
@@ -10,7 +10,7 @@ class Player:
         self.cards_seen: List[bool] = [False, False, False, False]
         self.card_in_hand: Optional[cards.Card] = None  # noqa: F403, F405
         self.decision_policy: str = decision_policy
-        self.decider = None
+        self.decider: Any = None
 
     def calc_points_in_front(self) -> int:
         total_value: int = 0

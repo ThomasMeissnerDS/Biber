@@ -1,6 +1,8 @@
-from typing import Tuple
+from typing import Any, Tuple
 
 from actions import game_actions
+from base_classes.cards import Card
+from base_classes.checkpoints import CheckPointDecisions
 from base_classes.game_state import GameState
 from base_classes.players import Player
 
@@ -40,3 +42,26 @@ def pass_turn(game_state: GameState) -> GameState:
 def knock_on_table(game: GameState) -> GameState:
     game.game_status = "finished"
     return game
+
+
+def chose_action(
+    game: GameState,
+    player: Player,
+    checkpoint_decisions: CheckPointDecisions,
+    check_point: str = "None",
+) -> Any:
+    if check_point == "play_or_discard" and isinstance(player.card_in_hand, Card):
+        play_options = checkpoint_decisions.check_point_decisions[check_point][
+            player.card_in_hand.card_type
+        ]
+    else:
+        play_options = checkpoint_decisions.check_point_decisions[check_point]
+
+    if player.decision_policy == "random":
+        decision = game.random_generator.choice(play_options)
+    elif player.decision_policy == "epsilon-greedy":
+        decision = player.decider.checkpoint_bandits[check_point].chose_action()
+    else:
+        raise ValueError("No compatible decision policy has been passed.")
+
+    return decision

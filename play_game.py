@@ -7,6 +7,7 @@ from actions.game_actions import (
     prepare_game,
 )
 from actions.player_actions import (
+    chose_action,
     draw_card_from_deck,
     draw_card_from_open_staple,
     move_card_from_hand_to_open_staple,
@@ -34,56 +35,73 @@ def play_game():
             print("---------------------------")
             print([(c.card_type, c.value) for c in player.cards])
             # decide to draw from deck or open staple -> checkpoint: "draw_card"
-            draw_options = checkpoint_decisions.check_point_decisions["draw_card"]
             game_state_labels, game_state_values = get_state_from_player_perspective(
                 player, game
             )
-            decision = game.random_generator.choice(draw_options)
+            decision = chose_action(game, player, checkpoint_decisions, "draw_card")
             allowed_draws = 1
 
             if decision == "deck":
                 game, player = draw_card_from_deck(game, player)
                 if player.card_in_hand.card_type == "double_turn":
                     game, player = draw_card_from_deck(game, player)
-                    allowed_draws += 1
             elif decision == "open_staple":
                 game, player = draw_card_from_open_staple(game, player)
 
-            del draw_options
             del decision
             del game_state_labels
             del game_state_values
 
             # card moved to player and player can decide how to proceed
-            play_options = checkpoint_decisions.check_point_decisions[
-                "play_or_discard"
-            ][player.card_in_hand.card_type]
 
-            for draw in range(allowed_draws):
-                decision = game.random_generator.choice(play_options)
-                if draw == 1:
-                    game, player = draw_card_from_deck(game, player)
+            while allowed_draws >= 1:
+                decision = chose_action(
+                    game, player, checkpoint_decisions, "play_or_discard"
+                )
+
                 if decision == "move_to_open_staple":
                     game, player = move_card_from_hand_to_open_staple(game, player)
+                    allowed_draws -= 1
                 elif (
                     decision == "exchange_with_own_card"
                     and player.card_in_hand.card_type == "number"
                 ):
-                    idx_decision = game.random_generator.choice([i for i in range(4)])
+                    idx_decision = chose_action(
+                        game,
+                        player,
+                        checkpoint_decisions,
+                        "exchange_with_own_card.number.idx_decision",
+                    )
                     player, game = exchange_card(player, idx_decision, game)
                     del idx_decision
-                    break
+                    allowed_draws -= 2
                 elif (
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "trade"
                 ):
-                    idx_decision = game.random_generator.choice([i for i in range(4)])
-                    target_idx_decision = game.random_generator.choice(
-                        [i for i in range(4)]
+                    idx_decision = chose_action(
+                        game,
+                        player,
+                        checkpoint_decisions,
+                        "use_special_card.trade.idx_decision",
                     )
-                    opponent_decision = game.random_generator.choice(
-                        [p for p in game.players if p != player]
+                    target_idx_decision = chose_action(
+                        game,
+                        player,
+                        checkpoint_decisions,
+                        "use_special_card.trade.target_idx_decision",
                     )
+
+                    checkpoint_decisions.check_point_decisions[
+                        "use_special_card.trade.opponent_decision"
+                    ] = [p for p in game.players if p != player]
+                    opponent_decision = chose_action(
+                        game,
+                        player,
+                        checkpoint_decisions,
+                        "use_special_card.trade.opponent_decision",
+                    )
+
                     player, target_player, game_state = trade_card(
                         player,
                         idx_decision,
@@ -95,22 +113,26 @@ def play_game():
                     del idx_decision
                     del target_idx_decision
                     del opponent_decision
-                    break
+                    allowed_draws -= 2
                 elif (
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "double_turn"
                 ):
-                    allowed_draws += 1
                     game, player = draw_card_from_deck(game, player)
                     game, player = move_card_from_hand_to_open_staple(game, player)
                 elif (
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "reveal"
                 ):
-                    idx_decision = game.random_generator.choice([i for i in range(4)])
+                    idx_decision = chose_action(
+                        game,
+                        player,
+                        checkpoint_decisions,
+                        "use_special_card.reveal.idx_decision",
+                    )
                     player, game = reveal_card(player, game, idx_decision)
                     del idx_decision
-                    break
+                    allowed_draws -= 2
 
                 del decision
 
