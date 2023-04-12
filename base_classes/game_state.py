@@ -93,10 +93,14 @@ class GameState:
                     )
                 self.players.append(player)
             else:
-                print(self.player_configs)
                 try:
                     loaded_player = load_model(conf)
                     loaded_player.name = f"player_{player_nb}"
+                    # loaded_player.decision_policy = "epsilon-greedy"
+                    # some cleanup from prev game
+                    loaded_player.cards_seen = [False, False, False, False]
+                    loaded_player.card_in_hand = None
+                    loaded_player.cards = []
                     self.players.append(loaded_player)
                     del loaded_player
                 except FileNotFoundError:

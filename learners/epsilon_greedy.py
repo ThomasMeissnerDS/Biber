@@ -17,9 +17,9 @@ class EpsilonGreedy:
         self.epsilon = 0.05
         self.actions: List[str] = actions
         self.actions_indices: List[int] = [i for i in range(len(actions))]
-        self.nb_actions_triggered: List[int] = [0]
-        self.total_impact_state_estimation: List[float] = [0.0]
-        self.avg_impact_state_estimation: List[float] = [0.0]
+        self.nb_actions_triggered: List[int] = [0 for _i in actions]
+        self.total_impact_state_estimation: List[float] = [0.0 for _i in actions]
+        self.avg_impact_state_estimation: List[float] = [0.0 for _i in actions]
         self.random_seed: int = random_seed
         self.random_generator = np.random.default_rng(self.random_seed)
 
@@ -33,7 +33,7 @@ class EpsilonGreedy:
 
     def _get_random_arm(self) -> int:
         arm_index = self.random_generator.choice(self.actions_indices, 1)
-        return arm_index
+        return arm_index[0]
 
     def _select_pull_mechanism(self) -> int:
         if self.random_generator.random() > self.epsilon:
@@ -46,7 +46,7 @@ class EpsilonGreedy:
     def chose_action(self):
         action_idx: int = self._select_pull_mechanism()
         self.update_random_generator()
-        return self.actions[action_idx]
+        return self.actions[action_idx], action_idx
 
     def update_bandit(self, action_idx: int, game_state_impact):
         self.nb_actions_triggered[action_idx] += 1

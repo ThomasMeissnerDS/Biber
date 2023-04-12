@@ -8,6 +8,7 @@ from actions.game_actions import (
 )
 from actions.player_actions import (
     chose_action,
+    update_policy,
     draw_card_from_deck,
     draw_card_from_open_staple,
     move_card_from_hand_to_open_staple,
@@ -33,13 +34,15 @@ def play_game():
     while game.game_status != "finished":
         game = make_turn(game)
         for idx, player in enumerate(game.player_order):
-            print(f"Turn of {player.name}")
+            print(f"Turn of {player.name} with idx {idx}")
             print([(c.card_type, c.value) for c in player.cards])
             # decide to draw from deck or open staple -> checkpoint: "draw_card"
             game_state_labels, game_state_values = get_state_from_player_perspective(
                 player, game
             )
-            decision = chose_action(game, player, checkpoint_decisions, "draw_card")
+            decision, action_idx = chose_action(game, player, checkpoint_decisions, "draw_card")
+            game, player = update_policy(game, player, "draw_card", action_idx)
+
             allowed_draws = 1
 
             if decision == "deck":
@@ -60,7 +63,7 @@ def play_game():
                     check_pt_key = "play_or_discard.number"
                 else:
                     check_pt_key = "play_or_discard.special_card"
-                decision = chose_action(
+                decision, action_idx = chose_action(
                     game, player, checkpoint_decisions, check_pt_key
                 )
 
@@ -72,7 +75,7 @@ def play_game():
                     decision == "exchange_with_own_card"
                     and player.card_in_hand.card_type == "number"
                 ):
-                    idx_decision = chose_action(
+                    idx_decision, action_idx = chose_action(
                         game,
                         player,
                         checkpoint_decisions,
@@ -85,13 +88,13 @@ def play_game():
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "trade"
                 ):
-                    idx_decision = chose_action(
+                    idx_decision, action_idx = chose_action(
                         game,
                         player,
                         checkpoint_decisions,
                         "use_special_card.trade.idx_decision",
                     )
-                    target_idx_decision = chose_action(
+                    target_idx_decision, action_idx = chose_action(
                         game,
                         player,
                         checkpoint_decisions,
@@ -101,7 +104,7 @@ def play_game():
                     checkpoint_decisions.check_point_decisions[
                         "use_special_card.trade.opponent_decision"
                     ] = [p for p in game.players if p != player]
-                    opponent_decision = chose_action(
+                    opponent_decision, action_idx = chose_action(
                         game,
                         player,
                         checkpoint_decisions,
@@ -130,7 +133,7 @@ def play_game():
                     decision == "use_special_card"
                     and player.card_in_hand.card_type == "reveal"
                 ):
-                    idx_decision = chose_action(
+                    idx_decision, action_idx = chose_action(
                         game,
                         player,
                         checkpoint_decisions,
@@ -142,10 +145,13 @@ def play_game():
 
                 del decision
 
-            if game.player_configs[idx] == "None" or game.player_configs[idx] is None:
+            print(player.decision_policy)
+            print(game.players[idx].decision_policy)
+            if game_config["player_settings"]["save_states"][player.name] == "None" or game_config["player_settings"]["save_states"][player.name] is None:
+                print("HERE IT IS")
                 pass
             else:
-                save_model(game.player_configs[idx], player)
+                save_model(game_config["player_settings"]["save_states"][player.name], player)
 
             game.player_order[idx] = player
 
