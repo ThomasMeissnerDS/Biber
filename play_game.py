@@ -145,10 +145,7 @@ def play_game():
 
                 del decision
 
-            print(player.decision_policy)
-            print(game.players[idx].decision_policy)
             if game_config["player_settings"]["save_states"][player.name] == "None" or game_config["player_settings"]["save_states"][player.name] is None:
-                print("HERE IT IS")
                 pass
             else:
                 save_model(game_config["player_settings"]["save_states"][player.name], player)
