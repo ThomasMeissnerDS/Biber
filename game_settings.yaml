@@ -3,7 +3,7 @@ player_settings:
     player_1:
     player_2:
     player_3:
-    player_4:
+    player_4: "/home/thomas/IdeaProjects/Biber/trained_players/epsilon-greedy.pkl"
   decision_logic:
     player_1: "random"
     player_2: "random"

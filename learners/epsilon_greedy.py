@@ -16,7 +16,7 @@ class EpsilonGreedy:
     def __init__(self, actions, random_seed):
         self.epsilon = 0.05
         self.actions: List[str] = actions
-        self.actions_indices: List[int] = [i for i in range(actions)]
+        self.actions_indices: List[int] = [i for i in range(len(actions))]
         self.nb_actions_triggered: List[int] = [0]
         self.total_impact_state_estimation: List[float] = [0.0]
         self.avg_impact_state_estimation: List[float] = [0.0]
@@ -29,7 +29,7 @@ class EpsilonGreedy:
 
     def _get_best_arm(self) -> int:
         arm_index = np.argmax(np.asarray(self.avg_impact_state_estimation), axis=0)
-        return arm_index[0]
+        return arm_index
 
     def _get_random_arm(self) -> int:
         arm_index = self.random_generator.choice(self.actions_indices, 1)
@@ -69,5 +69,5 @@ class EpsilonGreedyPlayer:
         self.checkpoint_bandits: Dict[str, EpsilonGreedy] = {}
         for checkpoint, actions in self.checkpoints.check_point_decisions.items():
             self.checkpoint_bandits[checkpoint] = EpsilonGreedy(
-                actions=self.checkpoint_bandits[actions], random_seed=random_seed
+                actions=actions, random_seed=random_seed
             )

@@ -26,7 +26,8 @@ def play_game():
     game = GameState(
         random_seed=7,
         nb_players=4,
-        player_configs=game_config["player_settings"]["save_states"],
+        player_configs=list(game_config["player_settings"]["save_states"].values()),
+        player_decision_logic=list(game_config["player_settings"]["decision_logic"].values())
     )
     game = prepare_game(game)
     while game.game_status != "finished":
@@ -55,9 +56,14 @@ def play_game():
             # card moved to player and player can decide how to proceed
 
             while allowed_draws >= 1:
+                if player.card_in_hand.card_type == "number":
+                    check_pt_key = "play_or_discard.number"
+                else:
+                    check_pt_key = "play_or_discard.special_card"
                 decision = chose_action(
-                    game, player, checkpoint_decisions, "play_or_discard"
+                    game, player, checkpoint_decisions, check_pt_key
                 )
+
 
                 if decision == "move_to_open_staple":
                     game, player = move_card_from_hand_to_open_staple(game, player)
@@ -136,7 +142,7 @@ def play_game():
 
                 del decision
 
-            if game.player_configs[idx] == "None":
+            if game.player_configs[idx] == "None" or game.player_configs[idx] is None:
                 pass
             else:
                 save_model(game.player_configs[idx], player)

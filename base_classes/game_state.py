@@ -29,11 +29,15 @@ class GameState:
 
         if not isinstance(player_configs, list):
             self.player_configs: List[str] = ["None" for _p in range(self.nb_players)]
+        else:
+            self.player_configs = player_configs
 
         if not isinstance(player_decision_logic, list):
             self.player_decision_logic: List[str] = [
                 "random" for _p in range(self.nb_players)
             ]
+        else:
+            self.player_decision_logic = player_decision_logic
 
         self.card_deck: CardDeck = CardDeck()
         self.open_staple: OpenStaple = OpenStaple()
@@ -76,11 +80,11 @@ class GameState:
         check_pts = CheckPointDecisions()
 
         for player_nb, conf in enumerate(self.player_configs):
-            if self.player_configs[player_nb] == "None":
-                player = Player(
-                    name=f"player_{player_nb}",
-                    decision_policy=self.player_decision_logic[player_nb],
-                )
+            player = Player(
+                name=f"player_{player_nb}",
+                decision_policy=self.player_decision_logic[player_nb],
+            )
+            if self.player_configs[player_nb] == "None" or self.player_configs[player_nb] is None:
                 if player.decision_policy == "random":
                     pass
                 elif player.decision_policy == "epsilon-greedy":
@@ -89,4 +93,13 @@ class GameState:
                     )
                 self.players.append(player)
             else:
-                self.players.append(load_model(conf))
+                print(self.player_configs)
+                try:
+                    self.players.append(load_model(conf))
+                except FileNotFoundError:
+                    print(f"No config has been found. Creating player {player_nb} from scratch.")
+                    if player.decision_policy == "epsilon-greedy":
+                        player.decider = EpsilonGreedyPlayer(
+                            checkpts=check_pts, random_seed=self.random_seed
+                        )
+                    self.players.append(player)

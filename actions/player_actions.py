@@ -50,12 +50,7 @@ def chose_action(
     checkpoint_decisions: CheckPointDecisions,
     check_point: str = "None",
 ) -> Any:
-    if check_point == "play_or_discard" and isinstance(player.card_in_hand, Card):
-        play_options = checkpoint_decisions.check_point_decisions[check_point][
-            player.card_in_hand.card_type
-        ]
-    else:
-        play_options = checkpoint_decisions.check_point_decisions[check_point]
+    play_options = checkpoint_decisions.check_point_decisions[check_point]
 
     if player.decision_policy == "random":
         decision = game.random_generator.choice(play_options)
