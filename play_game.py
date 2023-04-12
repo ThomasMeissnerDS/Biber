@@ -33,7 +33,7 @@ def play_game():
     while game.game_status != "finished":
         game = make_turn(game)
         for idx, player in enumerate(game.player_order):
-            print("---------------------------")
+            print(f"Turn of {player.name}")
             print([(c.card_type, c.value) for c in player.cards])
             # decide to draw from deck or open staple -> checkpoint: "draw_card"
             game_state_labels, game_state_values = get_state_from_player_perspective(
@@ -146,6 +146,8 @@ def play_game():
                 pass
             else:
                 save_model(game.player_configs[idx], player)
+
+            game.player_order[idx] = player
 
     # evaluation phase: exchange remaining non-numeric cards by random cards from staple until all are numerics
     print("Exchange remaining special cards with numeric cards.")

@@ -50,7 +50,7 @@ class EpsilonGreedy:
 
     def update_bandit(self, action_idx: int, game_state_impact):
         self.nb_actions_triggered[action_idx] += 1
-        self.total_impact_state_estimation[action_idx] += game_state_impact
+        self.total_impact_state_estimation[action_idx] += (game_state_impact * -1)  # we want to minimize the points
         self.avg_impact_state_estimation[action_idx] = (
             self.total_impact_state_estimation[action_idx]
             / self.nb_actions_triggered[action_idx]

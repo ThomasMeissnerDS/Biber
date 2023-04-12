@@ -95,7 +95,10 @@ class GameState:
             else:
                 print(self.player_configs)
                 try:
-                    self.players.append(load_model(conf))
+                    loaded_player = load_model(conf)
+                    loaded_player.name = f"player_{player_nb}"
+                    self.players.append(loaded_player)
+                    del loaded_player
                 except FileNotFoundError:
                     print(f"No config has been found. Creating player {player_nb} from scratch.")
                     if player.decision_policy == "epsilon-greedy":

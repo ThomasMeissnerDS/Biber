@@ -189,10 +189,14 @@ def set_player_order(game: GameState) -> GameState:
 def prepare_game(game: GameState) -> GameState:
     game.fill_deck()
     game.create_players()
+    print([name.name for name in game.players])
     game = set_player_order(game)
+    print([name.name for name in game.player_order])
     game = fill_player_hands(game)
+    print([name.name for name in game.player_order])
     game = players_see_outer_cards(game)
     game = move_top_card_from_deck_to_staple(game)
+    print([name.name for name in game.player_order])
     return game
 
 
