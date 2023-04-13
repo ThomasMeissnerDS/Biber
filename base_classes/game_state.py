@@ -84,7 +84,10 @@ class GameState:
                 name=f"player_{player_nb}",
                 decision_policy=self.player_decision_logic[player_nb],
             )
-            if self.player_configs[player_nb] == "None" or self.player_configs[player_nb] is None:
+            if (
+                self.player_configs[player_nb] == "None"
+                or self.player_configs[player_nb] is None
+            ):
                 if player.decision_policy == "random":
                     pass
                 elif player.decision_policy == "epsilon-greedy":
@@ -104,7 +107,9 @@ class GameState:
                     self.players.append(loaded_player)
                     del loaded_player
                 except FileNotFoundError:
-                    print(f"No config has been found. Creating player {player_nb} from scratch.")
+                    print(
+                        f"No config has been found. Creating player {player_nb} from scratch."
+                    )
                     if player.decision_policy == "epsilon-greedy":
                         player.decider = EpsilonGreedyPlayer(
                             checkpts=check_pts, random_seed=self.random_seed

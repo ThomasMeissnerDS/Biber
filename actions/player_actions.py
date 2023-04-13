@@ -45,14 +45,18 @@ def knock_on_table(game: GameState) -> GameState:
 
 
 def own_seen_cards_to_val(player: Player) -> int:
-    num_cards_seen, special_cards_seen, special_cards = game_actions.calc_value_of_own_known_cards(player)
+    (
+        num_cards_seen,
+        special_cards_seen,
+        special_cards,
+    ) = game_actions.calc_value_of_own_known_cards(player)
     total_value = 0
     total_seen = 0
     for card, value in num_cards_seen.items():
         if value > 0:
             total_value += card * value
             total_seen += 1
-    for card, value in special_cards_seen.items():
+    for _sp_card, value in special_cards_seen.items():
         if value > 0:
             total_value += 5  # just assigning a plain expected value
             total_seen += 1
@@ -74,20 +78,28 @@ def chose_action(
         action_idx = None
     elif player.decision_policy == "epsilon-greedy":
         if check_point == "use_special_card.trade.opponent_decision":
-            player.decider.checkpoint_bandits[check_point].actions = [p for p in game.players if p != player]
-        decision, action_idx = player.decider.checkpoint_bandits[check_point].chose_action()
+            player.decider.checkpoint_bandits[check_point].actions = [
+                p for p in game.players if p != player
+            ]
+        decision, action_idx = player.decider.checkpoint_bandits[
+            check_point
+        ].chose_action()
     else:
         raise ValueError("No compatible decision policy has been passed.")
 
     return decision, action_idx
 
 
-def update_policy(game: GameState, player: Player, check_point: str, action_idx: Any) -> Tuple[GameState, Player]:
+def update_policy(
+    game: GameState, player: Player, check_point: str, action_idx: Any
+) -> Tuple[GameState, Player]:
     if player.decision_policy == "random":
         pass
     elif player.decision_policy == "epsilon-greedy":
         own_cards_est_val = own_seen_cards_to_val(player)
-        player.decider.checkpoint_bandits[check_point].update_bandit(action_idx, own_cards_est_val)
+        player.decider.checkpoint_bandits[check_point].update_bandit(
+            action_idx, own_cards_est_val
+        )
     else:
         raise ValueError("No compatible decision policy has been passed.")
 
