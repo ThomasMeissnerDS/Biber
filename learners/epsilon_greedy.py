@@ -14,7 +14,7 @@ class EpsilonGreedy:
     """
 
     def __init__(self, actions, random_seed):
-        self.epsilon = 0.05
+        self.epsilon = 0.20
         self.actions: List[str] = actions
         self.actions_indices: List[int] = [i for i in range(len(actions))]
         self.nb_actions_triggered: List[int] = [0 for _i in actions]
@@ -25,6 +25,8 @@ class EpsilonGreedy:
 
     def update_random_generator(self):
         self.random_seed += 1
+        if self.epsilon > 0.1:
+            self.epsilon -= 0.001
         self.random_generator = np.random.default_rng(self.random_seed)
 
     def _get_best_arm(self) -> int:

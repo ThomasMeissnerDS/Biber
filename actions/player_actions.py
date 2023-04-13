@@ -49,13 +49,13 @@ def own_seen_cards_to_val(player: Player) -> int:
     total_value = 0
     total_seen = 0
     for card, value in num_cards_seen.items():
-        total_value += card * value
-        total_seen += 1
-
-    for card, _value in special_cards_seen.items():
-        total_value += 5  # just assigning a plain expected value
-        total_seen += 1
-
+        if value > 0:
+            total_value += card * value
+            total_seen += 1
+    for card, value in special_cards_seen.items():
+        if value > 0:
+            total_value += 5  # just assigning a plain expected value
+            total_seen += 1
     not_seen = 4 - total_seen
     total_value += not_seen * 5
     return total_value
@@ -73,6 +73,8 @@ def chose_action(
         decision = game.random_generator.choice(play_options)
         action_idx = None
     elif player.decision_policy == "epsilon-greedy":
+        if check_point == "use_special_card.trade.opponent_decision":
+            player.decider.checkpoint_bandits[check_point].actions = [p for p in game.players if p != player]
         decision, action_idx = player.decider.checkpoint_bandits[check_point].chose_action()
     else:
         raise ValueError("No compatible decision policy has been passed.")

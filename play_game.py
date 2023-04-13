@@ -67,7 +67,6 @@ def play_game():
                     game, player, checkpoint_decisions, check_pt_key
                 )
 
-
                 if decision == "move_to_open_staple":
                     game, player = move_card_from_hand_to_open_staple(game, player)
                     allowed_draws -= 1
@@ -104,13 +103,14 @@ def play_game():
                     checkpoint_decisions.check_point_decisions[
                         "use_special_card.trade.opponent_decision"
                     ] = [p for p in game.players if p != player]
+
                     opponent_decision, action_idx = chose_action(
                         game,
                         player,
                         checkpoint_decisions,
                         "use_special_card.trade.opponent_decision",
                     )
-
+                    print(opponent_decision)
                     player, target_player, game_state = trade_card(
                         player,
                         idx_decision,
@@ -176,7 +176,7 @@ def play_game():
             best_player = [player.name]
         elif pts == lowest_pts:
             best_player.append(player.name)
-        print(f"Player {player.name} achieved {pts} points.")
+        print(f"Player {player.name} achieved {pts} points using logic {player.decision_policy}.")
 
     if len(best_player) == 1:
         print(
