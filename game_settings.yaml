@@ -1,0 +1,11 @@
+player_settings:
+  save_states:
+    player_0:
+    player_1:
+    player_2:
+    player_3: "/home/thomas/IdeaProjects/Biber/trained_players/epsilon-greedy.pkl"
+  decision_logic:
+    player_0: "random"
+    player_1: "random"
+    player_2: "random"
+    player_3: "epsilon-greedy"

@@ -180,9 +180,11 @@ def players_see_outer_cards(game_state: GameState) -> GameState:
 
 
 def set_player_order(game: GameState) -> GameState:
-    game.player_order = game.random_generator.choice(
+    ordered = game.random_generator.choice(
         game.players, game.nb_players, replace=False
     ).tolist()
+    game.player_order = ordered
+    game.players = ordered  # noqa
     return game
 
 
